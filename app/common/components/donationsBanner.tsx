@@ -3,7 +3,7 @@ import Anons from "@/app/common/components/Anons";
 import Image from "next/image";
 
 export default function DonationsBanner() {
-    return <div className="flex flex-col items-center gap-6">
+    return <div className="flex flex-col items-center gap-6 w-[370px]">
         <Anons/>
         <div
             className="w-full h-[82px] flex items-center gap-3 p-[20px] bg-[#1A1D1F] ml-[20px] border-[1px] border-[#232627] rounded-[8px]">

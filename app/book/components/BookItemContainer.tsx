@@ -2,6 +2,7 @@
 import axios from 'axios'
 import {useEffect, useState} from "react";
 import BookItem from "@/app/book/components/BookItem";
+import Image from "next/image";
 
 const STEP = 6;
 
@@ -34,7 +35,8 @@ export default function BookItemContainer({search}: { search: string }) {
     };
 
     return <div className="w-full">
-        {book.slice(0, shown).map((item) => <BookItem
+        {book.length > 0 ? (
+            book.slice(0, shown).map((item) => <BookItem
             key={item.id}
             id={item.id}
             author={item.author}
@@ -46,7 +48,13 @@ export default function BookItemContainer({search}: { search: string }) {
             price={item.price}
             newPrice={item.newPrice}
             rating={item.rating}
-        />)}
+        />)) : (
+            <div
+                className="flex flex-col items-center justify-center py-16 bg-[#202020] rounded-[12px]">
+                <Image src="/notfoundcourse.svg" alt="" className="w-[200px] h-[180px] mb-4" width={200} height={180}/>
+                <p className="text-[#F7F9FA] font-poppins text-[16px] font-medium">Hech qanday ma'lumot topilmadi</p>
+            </div>
+        )}
         {shown < book.length && (
             <button
                 onClick={loadMore}

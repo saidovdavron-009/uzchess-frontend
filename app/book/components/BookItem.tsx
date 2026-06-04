@@ -23,7 +23,7 @@ export default function BookItem({
     price: number,
     newPrice: number,
     rating: number,
-    id: number
+    id: any
 }) {
 
     let newPrice1 = Number(newPrice)

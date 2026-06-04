@@ -1,3 +1,4 @@
+"use client"
 import {useRouter} from "next/navigation";
 import Image from "next/image";
 
@@ -14,7 +15,7 @@ export default function CourseItem({
                                        sectionsCount,
                                        id
                                    }: {
-    id: any
+    id: any,
     author: any,
     category: any,
     language: any,
@@ -32,7 +33,7 @@ export default function CourseItem({
     const router = useRouter()
 
     return <div
-        onClick={() => router.push(`/course/${id}`)}
+        onClick={() => router.push(`/courses/${id}`)}
         className="w-[676px] h-[189px] bg-[#1A1D1F] mt-[24px] flex p-[24px] gap-[20px] rounded-[8px] border-[#1F272A] border-[1px] hover:border-[#1C92E0] cursor-pointer">
         <div>
             <div

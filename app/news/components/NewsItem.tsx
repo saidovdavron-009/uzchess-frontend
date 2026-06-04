@@ -1,16 +1,22 @@
+"use client"
 import Image from "next/image";
+import {useRouter} from "next/navigation";
 
 interface NewsItemProps {
     title: string;
     date: string;
     image: string;
     content: string;
+    id: any
 }
 
 export default function NewsItem({title, date, image, content, id}: NewsItemProps) {
+
+    const router = useRouter()
     return (
         <div
-            className="w-[326px] h-[251px] p-3 bg-[#1A1D1F] rounded-[8px] text-white"
+            onClick={() => router.push(`/news/${id}`)}
+            className="w-[326px] h-[251px] p-3 bg-[#1A1D1F] rounded-[8px] text-white hover:border-[]"
         >
             <div>
                 <Image src={image} alt="image1" className="w-[302px] h-[113px] rounded-t-[4px] object-cover" width={302}
