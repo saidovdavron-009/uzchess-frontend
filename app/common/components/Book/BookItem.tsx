@@ -11,7 +11,7 @@ const topBooks = [
 
 export default function BookItem() {
     return (
-        <div className="w-[326px] h-[686px] mt-[20px] flex flex-col gap-6 items-center">
+        <div className="w-[326px] mt-[20px] flex flex-col gap-6 items-center">
             <Anons />
             <div className="w-[326px] rounded-[6px] bg-[#1A1D1F] p-[16px] ml-[22px]">
                 <div className="flex justify-between items-center">

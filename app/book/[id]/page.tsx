@@ -50,7 +50,14 @@ export default function Page() {
 
     return <div className="flex flex-col">
         <HeaderItem/>
-        <Section/>
+        <div className="flex gap-3 w-[1374px] h-[44px] items-center pl-[30px] ml-[34px]">
+            <Image src="/NewsImage/icon8.svg" alt="icon" width={20} height={20} className="w-5 h-5"/>
+            <h4 className="w-[42px] h-[18px] text-[#6D7274] font-medium mb-1">Asosiy</h4>
+            <Image src="/NewsImage/icon7.svg" alt="icon" width={8} height={8} className="w-2 h-2 mt-2 mb-[2px]"/>
+            <h4 className="w-[42px] h-[18px] text-white font-medium mb-1">Kutubxona</h4>
+            <Image src="/NewsImage/icon7.svg" alt="icon" width={8} height={8} className="w-2 h-2 mt-2 ml-[30px] mb-[2px]"/>
+            <h4 className=" h-[18px] text-white font-medium mb-1">{currentBook.title}</h4>
+        </div>
         <div className="flex gap-[40px]">
             <div
                 className="w-[1070px] h-[535px] flex flex-col gap-[20px] mt-[20px] ml-[38px] bg-[#1A1D1F] border-[#1F272A] border-[1px] rounded-[12px] p-[32px]">

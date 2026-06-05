@@ -7,7 +7,7 @@ export default function YoshlarAgencyPoster() {
         <Anons/>
         <div
             className="w-[326px] h-[471px] bg-[#121C26] rounded-[20px] ml-[20px] flex flex-col items-center justify-between p-[36px]">
-            <Image src="/Subtract.svg" alt="gerb" className="text-[#FFFFFF] opacity-10 absolute" width={260} height={400}/>
+            <Image src="/Subtract.svg" alt="gerb" className="text-[#FFFFFF] opacity-10 absolute mt-[-20px]" width={326} height={469}/>
             <div className="w-[175px] h-[38px] flex gap-1">
                 <Image src="/image%20107.svg" alt="gerp" width={38} height={38}/>
                 <div className="flex flex-col">

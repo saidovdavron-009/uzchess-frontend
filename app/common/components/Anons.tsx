@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 export default function Anons() {
-    return <div className="w-[326px] h-[192px] flex flex-col items-start relative p-4 bg-[#0B4789] overflow-hidden rounded-[8px]">
+    return <div className="w-[326px] h-[192px] flex flex-col items-start relative p-4 bg-[#0B4789] overflow-hidden rounded-[8px] ml-[20px]">
         <Image className="absolute top-0 left-0 w-full h-full" src="/bg.svg" alt="" width={326} height={192}/>
         <Image src="/Vector.svg" alt="" className="absolute top-0 right-0" width={100} height={100}/>
         <Image src="/Group.svg" alt="" className="h-[24px]" width={120} height={24}/>

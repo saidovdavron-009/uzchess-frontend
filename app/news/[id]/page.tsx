@@ -6,7 +6,8 @@ import Section from "@/app/common/components/Section";
 import Anons from "@/app/common/components/Anons";
 import BookItem from "@/app/common/components/Book/BookItem";
 import Footer from "@/app/common/components/Footer/Footer";
-import HeaderItem from "@/app/common/components/Header/Header"; // Header'ni ham qo'shib qo'ydim
+import HeaderItem from "@/app/common/components/Header/Header";
+import Image from "next/image"; // Header'ni ham qo'shib qo'ydim
 
 interface NewsItemData {
     id: number;
@@ -106,6 +107,14 @@ export default function NewsDetail() {
     return (
         <div className="bg-[#202020] min-h-screen text-white">
             <HeaderItem/>
+            <div className="flex gap-3 w-[1374px] h-[44px] items-center pl-[30px] ml-[34px]">
+                <Image src="/NewsImage/icon8.svg" alt="icon" width={20} height={20} className="w-5 h-5"/>
+                <h4 className="w-[42px] h-[18px] text-[#6D7274] font-medium mb-1">Asosiy</h4>
+                <Image src="/NewsImage/icon7.svg" alt="icon" width={8} height={8} className="w-2 h-2 mt-2 mb-[2px]"/>
+                <h4 className="w-[42px] h-[18px] text-white font-medium mb-1">Kutubxona</h4>
+                <Image src="/NewsImage/icon7.svg" alt="icon" width={8} height={8} className="w-2 h-2 mt-2 ml-[30px] mb-[2px]"/>
+                <h4 className=" h-[18px] text-white font-medium mb-1">{news.title}</h4>
+            </div>
             <div className="px-4 md:px-8 lg:px-12 mt-6">
                 <div className="flex flex-col lg:flex-row gap-6 items-start">
                     <div className="w-full lg:flex-grow">
@@ -192,8 +201,7 @@ export default function NewsDetail() {
                         )}
                     </div>
 
-                    <aside className="w-full lg:w-[326px] shrink-0 flex flex-col gap-6 mb-12">
-                        <Anons/>
+                    <aside className="w-full lg:w-[326px] shrink-0 flex flex-col gap-6 mt-[-20px]">
                         <BookItem/>
                     </aside>
                 </div>

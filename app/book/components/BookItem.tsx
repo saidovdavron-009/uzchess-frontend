@@ -65,7 +65,7 @@ export default function BookItem({
                     <div className="h-[20px] w-[1px] bg-[white]"></div>
                     <div className="flex gap-1">
                         <Image src="/author.svg" alt="author icon" className="w-[22px] h-[18px]" width={22} height={18}/>
-                        <p className='text-[#F7F9FA99] font-normal text-[14px]'>{author.fullName}</p>
+                        <p className='text-[#F7F9FA99] font-normal text-[14px] w-[100px]'>{author.fullName}</p>
                     </div>
                 </div>
             </div>
