@@ -8,6 +8,7 @@ import CourseAccordion from "@/app/courses/components/Accardion";
 import Anons from "@/app/common/components/Anons";
 import axios from "axios";
 import {useParams} from "next/navigation";
+import CourseComments from "@/app/news/components/CourseIzoh";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -45,6 +46,7 @@ export default function Page() {
                 setLoading(false);
             }
         }
+
         if (id) getCourse();
     }, [id]);
 
@@ -78,8 +80,8 @@ export default function Page() {
             <Section/>
 
             <div className="w-full mt-[15px] px-[40px]">
-                {/* Banner */}
-                <div className="relative w-full min-h-[194px] rounded-xl overflow-hidden bg-[#0d1527] border border-slate-800 p-[32px] flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div
+                    className="relative w-full min-h-[194px] rounded-xl overflow-hidden bg-[#0d1527] border border-slate-800 p-[32px] flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
 
                     <img
                         src={`http://localhost:3000/${course.image}`}
@@ -120,18 +122,22 @@ export default function Page() {
                         </div>
                     </div>
 
-                    {/* O'ng qism */}
-                    <div className="relative z-10 flex flex-col items-end justify-between h-full self-stretch space-y-4 md:space-y-0 min-w-[370px]">
+                    <div
+                        className="relative z-10 flex flex-col items-end justify-between h-full self-stretch space-y-4 md:space-y-0 min-w-[370px]">
                         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg self-end">
                             <div className="flex gap-0.5 text-amber-400">
                                 {[...Array(5)].map((_, i) => (
                                     i < Math.floor(rating) ? (
-                                        <svg key={i} xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                        <svg key={i} xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                             viewBox="0 0 24 24" fill="currentColor">
+                                            <path
+                                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                                         </svg>
                                     ) : (
-                                        <svg key={i} xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                        <svg key={i} xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path
+                                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                                         </svg>
                                     )
                                 ))}
@@ -141,33 +147,39 @@ export default function Page() {
                         </div>
 
                         <div className="flex gap-[12px] w-full justify-end mt-[50px]">
-                            <button className="bg-[#1C92E0] hover:bg-[#177db3] w-[220px] h-[50px] rounded-[8px] px-[20px] flex gap-[10px] items-center justify-center font-medium text-[16px] text-white transition-all whitespace-nowrap">
+                            <button
+                                className="bg-[#1C92E0] hover:bg-[#177db3] w-[220px] h-[50px] rounded-[8px] px-[20px] flex gap-[10px] items-center justify-center font-medium text-[16px] text-white transition-all whitespace-nowrap">
                                 Kursni sotib olish
                             </button>
                             <button
                                 onClick={() => setLiked(!liked)}
                                 className="w-[50px] h-[50px] rounded-[8px] bg-[#14213d]/60 border-[#F7F9FA33] border-[1px] flex items-center justify-center hover:bg-[#1d2d50] transition-colors">
                                 {liked ? (
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#e25555">
-                                        <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                         fill="#e25555">
+                                        <path
+                                            d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
                                     </svg>
                                 ) : (
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
-                                        <path d="M19.5 12.572l-7.5 7.428l-7.5-7.428a5 5 0 1 1 7.5-6.566a5 5 0 1 1 7.5 6.572"/>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                         fill="none" stroke="white" strokeWidth="1.5">
+                                        <path
+                                            d="M19.5 12.572l-7.5 7.428l-7.5-7.428a5 5 0 1 1 7.5-6.566a5 5 0 1 1 7.5 6.572"/>
                                     </svg>
                                 )}
                             </button>
-                            <button className="w-[50px] h-[50px] rounded-[8px] bg-[#14213d]/60 border-[#F7F9FA33] border-[1px] flex items-center justify-center hover:bg-[#1d2d50] transition-colors active:scale-95">
+                            <button
+                                className="w-[50px] h-[50px] rounded-[8px] bg-[#14213d]/60 border-[#F7F9FA33] border-[1px] flex items-center justify-center hover:bg-[#1d2d50] transition-colors active:scale-95">
                                 <Image src="/share.svg" alt="share icon" width={18} height={18}/>
                             </button>
                         </div>
                     </div>
                 </div>
-
-                {/* Accordion va Anons */}
                 <div className="flex justify-between mt-[50px] gap-[24px]">
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 gap-20">
                         <CourseAccordion/>
+                        <div className="h-[64px]"></div>
+                        <CourseComments/>
                     </div>
                     <div className="w-[326px] shrink-0">
                         <Anons/>
