@@ -81,7 +81,7 @@ export default function Page() {
 
             <div className="w-full mt-[15px] px-[40px]">
                 <div
-                    className="relative w-full min-h-[194px] rounded-xl overflow-hidden bg-[#0d1527] border border-slate-800 p-[32px] flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    className="relative w-full min-h-[194px] rounded-xl overflow-hidden bg-[#0B141800] border border-slate-800 p-[32px] flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
 
                     <img
                         src={`http://localhost:3000/${course.image}`}
@@ -108,8 +108,8 @@ export default function Page() {
 
                         <div className="flex flex-wrap gap-[24px] text-[#F7F9FAC7]">
                             <div className="flex gap-[8px] items-center">
-                                {/*<Image src={course.difficulty.icon} alt="daraja" width={13} height={17}/>*/}
-                                {/*<p className="font-normal text-[14px]">{course.difficulty?.title || "—"}</p>*/}
+                                <Image src={`http://localhost:3000/${course.difficulty.icon}`} alt="daraja" width={13} height={17}/>
+                                <p className="font-normal text-[14px]">{course.difficulty.title}</p>
                             </div>
                             <div className="flex gap-[8px] items-center">
                                 <Image src="/section.svg" alt="bo'lim" width={18} height={18}/>

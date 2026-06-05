@@ -1,5 +1,6 @@
 import Anons from "@/app/common/components/Anons";
 import Image from "next/image";
+import Link from "next/link";
 
 const topBooks = [
     { image: "/BookImage/image1.svg", title: "Shaxmatdagi qobiliyatliringizga qayta baxo bering", author: "J.Silman" },
@@ -13,16 +14,18 @@ export default function BookItem() {
         <div className="w-[326px] h-[686px] mt-[20px] flex flex-col gap-6 items-center">
             <Anons />
             <div className="w-[326px] rounded-[6px] bg-[#1A1D1F] p-[16px] ml-[22px]">
-                {/* Header */}
                 <div className="flex justify-between items-center">
                     <h1 className="text-white font-medium">Top kitoblar</h1>
-                    <div className="flex items-center gap-1 cursor-pointer">
+
+                    <Link
+                        href="/book"
+                        className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity select-none"
+                    >
                         <span className="text-[#9DA1A3] font-poppins text-[14px]">Barchasi</span>
                         <Image src="/BookImage/icon11.svg" alt="barchasi" width={16} height={16} />
-                    </div>
+                    </Link>
                 </div>
 
-                {/* Kitoblar ro'yxati */}
                 <div className="mt-[20px] flex flex-col">
                     {topBooks.map((book, index) => (
                         <div key={index}>
