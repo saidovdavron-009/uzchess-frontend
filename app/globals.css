@@ -1,9 +1,17 @@
 @import "tailwindcss";
+@source "../app/**/*.{ts,tsx,js,jsx}";
+@source "../components/**/*.{ts,tsx,js,jsx}";
 
-@import "tw-animate-css";
+/*@import "tw-animate-css";*/
+
+@theme inline {
+    --font-poppins: var(--font-poppins-raw), sans-serif;
+    --font-inter: var(--font-inter-raw), sans-serif;
+}
 
 body {
     background-color: #202020;
     color: #e2e8f0;
     font-family: Arial, Helvetica, sans-serif;
 }
+

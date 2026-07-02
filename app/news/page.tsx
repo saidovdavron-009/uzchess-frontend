@@ -5,6 +5,7 @@ import BookItem from "@/app/common/components/Book/BookItem";
 import Footer from "@/app/common/components/Footer/Footer";
 import NewsItemContainer from "@/app/news/components/NewsItemContainer";
 import {useState} from "react";
+import Anons from "@/app/common/components/Anons";
 
 export default function Page() {
 
@@ -25,7 +26,10 @@ export default function Page() {
         </div>
         <div className="flex ml-[50px] gap-10">
             <NewsItemContainer search={search}/>
-            <BookItem/>
+            <div className="w-[326px] mt-[20px] flex flex-col gap-6 items-center">
+                <Anons/>
+                <BookItem/>
+            </div>
         </div>
         <Footer/>
     </div>

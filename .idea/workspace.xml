@@ -5,16 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c8216732-319f-4390-8e07-269b5b0699d4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/book/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/book/[id]/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/book/components/BookItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/book/components/BookItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/book/components/BookItemContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/book/components/BookItemContainer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/common/components/Anons.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/components/Anons.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/common/components/Book/BookItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/components/Book/BookItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/common/components/Header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/components/Header/Header.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/common/components/donationsBanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/components/donationsBanner.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/common/components/yoshlar-agency-poster.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/components/yoshlar-agency-poster.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/courses/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/[id]/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/courses/components/Accardion.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/components/Accardion.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/courses/components/CourseItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/components/CourseItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/courses/components/CourseItemContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/components/CourseItemContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/courses/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/news/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/news/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/news/components/CourseIzoh.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/news/components/CourseIzoh.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/news/components/NewsItemContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/news/components/NewsItemContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/news/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/news/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/cash-outline 1.svg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,29 +59,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "js.debugger.nextJs.config.created.client": "true",
-    "js.debugger.nextJs.config.created.server": "true",
-    "last_opened_file_path": "C:/Users/user/Desktop/Projects/uzchess-frontend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.Next.js: server-side.executor": "Run",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
-    "ts.external.directory.path": "C:\\Users\\user\\Desktop\\Projects\\uzchess-frontend\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/user/Desktop/Projects/uzchess-frontend/app/reyting&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.Next.js: server-side.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\user\\Desktop\\Projects\\uzchess-frontend\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\user\Desktop\Projects\uzchess-frontend\app\reyting" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\user\Desktop\Projects\uzchess-frontend\app\game" />
+      <recent name="C:\Users\user\Desktop\Projects\uzchess-frontend\app" />
+    </key>
+  </component>
   <component name="RunManager" selected="npm.Next.js: server-side">
     <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
       <method v="2" />
@@ -98,7 +124,29 @@
       <updated>1780583819830</updated>
       <workItem from="1780583821197" duration="516000" />
       <workItem from="1780584517930" duration="1964000" />
-      <workItem from="1780586519984" duration="32501000" />
+      <workItem from="1780586519984" duration="35557000" />
+      <workItem from="1780833021595" duration="867000" />
+      <workItem from="1780833962548" duration="131000" />
+      <workItem from="1780846672135" duration="814000" />
+      <workItem from="1780852510649" duration="3944000" />
+      <workItem from="1780939065748" duration="1257000" />
+      <workItem from="1781154223653" duration="2361000" />
+      <workItem from="1781869888350" duration="296000" />
+      <workItem from="1781918887880" duration="17194000" />
+      <workItem from="1782111531544" duration="18389000" />
+      <workItem from="1782226549488" duration="216000" />
+      <workItem from="1782226775275" duration="100000" />
+      <workItem from="1782287780372" duration="14105000" />
+      <workItem from="1782306092905" duration="84000" />
+      <workItem from="1782374786594" duration="36648000" />
+      <workItem from="1782517637605" duration="39023000" />
+      <workItem from="1782810168182" duration="22000" />
+      <workItem from="1782816089128" duration="776000" />
+      <workItem from="1782820096609" duration="26819000" />
+      <workItem from="1782911966813" duration="13000" />
+      <workItem from="1782912171720" duration="13000" />
+      <workItem from="1782912299135" duration="518000" />
+      <workItem from="1782951573838" duration="3163000" />
     </task>
     <servers />
   </component>

@@ -1,7 +1,6 @@
 "use client"
 import HeaderItem from "@/app/common/components/Header/Header";
 import Footer from "@/app/common/components/Footer/Footer";
-import Section from "@/app/common/components/Section";
 import Image from "next/image";
 import {useEffect, useState} from "react";
 import CourseAccordion from "@/app/courses/components/Accardion";
@@ -9,8 +8,59 @@ import Anons from "@/app/common/components/Anons";
 import axios from "axios";
 import {useParams} from "next/navigation";
 import CourseComments from "@/app/news/components/CourseIzoh";
+import DonationsBanner from "@/app/common/components/donationsBanner";
+import {getToken} from "@/app/common/components/Auth/authApi";
+import {toggleCourseLike, fetchLikedCourseIds} from "@/app/common/api/likeApi";
+import PurchaseModal from "@/app/courses/components/PurchaseModal";
+import {resolveImageUrl} from "@/app/common/utils/imageUrl";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+
+function getUserIdFromToken(token: string): number | null {
+    try {
+        const payload = token.split(".")[1];
+        const decoded = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
+        return decoded.id ?? null;
+    } catch {
+        return null;
+    }
+}
+
+async function checkPurchased(courseId: number, token: string): Promise<boolean> {
+    try {
+        const userId = getUserIdFromToken(token);
+        if (!userId) return false;
+        const {data} = await axios.get(`${API_URL}/public/purchasedCourse?size=200`, {
+            headers: {Authorization: `Bearer ${token}`},
+        });
+        const list: {id: number; userId: number | {id: number}}[] =
+            Array.isArray(data) ? data : (data.data ?? []);
+        const mine = list.filter(item => {
+            const uid = typeof item.userId === "object" ? item.userId?.id : item.userId;
+            return Number(uid) === userId;
+        });
+        for (const item of mine) {
+            const {data: detail} = await axios.get(`${API_URL}/public/purchasedCourse/${item.id}`, {
+                headers: {Authorization: `Bearer ${token}`},
+            });
+            if (Number(detail.courseId) === courseId) return true;
+        }
+        return false;
+    } catch {
+        return false;
+    }
+}
+
+async function savePurchase(courseId: number, token: string): Promise<void> {
+    const userId = getUserIdFromToken(token);
+    if (!userId) return;
+    await axios.post(`${API_URL}/admin/purchasedCourse`, {
+        userId,
+        courseId,
+        isCompleted: false,
+        date: new Date().toISOString(),
+    }, {headers: {Authorization: `Bearer ${token}`}});
+}
 
 interface Course {
     id: any;
@@ -33,6 +83,8 @@ export default function Page() {
     const [liked, setLiked] = useState(false);
     const [course, setCourse] = useState<Course | null>(null);
     const [loading, setLoading] = useState(true);
+    const [purchaseOpen, setPurchaseOpen] = useState(false);
+    const [purchased, setPurchased] = useState(false);
 
     useEffect(() => {
         async function getCourse() {
@@ -49,6 +101,20 @@ export default function Page() {
 
         if (id) getCourse();
     }, [id]);
+
+    useEffect(() => {
+        const token = getToken() ?? "";
+        if (!token || !id) return;
+        fetchLikedCourseIds(token).then(ids => setLiked(ids.has(Number(id))));
+        checkPurchased(Number(id), token).then(setPurchased);
+    }, [id]);
+
+    async function handleToggleLike() {
+        const token = getToken() ?? "";
+        if (!token || !id) return;
+        try { await toggleCourseLike(token, Number(id)); } catch {}
+        setLiked(prev => !prev);
+    }
 
     if (loading) return (
         <div className="flex flex-col min-h-screen">
@@ -82,7 +148,8 @@ export default function Page() {
                 <h4 className="w-[42px] h-[18px] text-[#6D7274] font-medium mb-1">Asosiy</h4>
                 <Image src="/NewsImage/icon7.svg" alt="icon" width={8} height={8} className="w-2 h-2 mt-2 mb-[2px]"/>
                 <h4 className="w-[42px] h-[18px] text-white font-medium mb-1">Kurslar</h4>
-                <Image src="/NewsImage/icon7.svg" alt="icon" width={8} height={8} className="w-2 h-2 mt-2 ml-[4px] mb-[2px]"/>
+                <Image src="/NewsImage/icon7.svg" alt="icon" width={8} height={8}
+                       className="w-2 h-2 mt-2 ml-[4px] mb-[2px]"/>
                 <h4 className=" h-[18px] text-white font-medium mb-1">{course.title}</h4>
             </div>
 
@@ -91,7 +158,7 @@ export default function Page() {
                     className="relative w-full min-h-[194px] rounded-xl overflow-hidden bg-[#0B141800] border border-slate-800 p-[32px] flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
 
                     <img
-                        src={`http://localhost:3000/${course.image}`}
+                        src={resolveImageUrl(course.image)}
                         alt="Background"
                         className="absolute inset-0 w-full h-full object-cover blur-sm opacity-40 z-0 pointer-events-none"
                     />
@@ -101,7 +168,7 @@ export default function Page() {
                                 {course.title}
                             </h1>
                             <div className="flex gap-3 items-center text-white">
-                                <Image src="/cash-outline 1.svg" alt="narx" width={24} height={24}/>
+                                <Image src="/pul.png" alt="narx" width={24} height={24}/>
                                 <h3 className="text-[20px] font-bold">
                                     {newPrice > 0 ? newPrice.toLocaleString() : price.toLocaleString()} uzs
                                 </h3>
@@ -115,7 +182,8 @@ export default function Page() {
 
                         <div className="flex flex-wrap gap-[24px] text-[#F7F9FAC7]">
                             <div className="flex gap-[8px] items-center">
-                                <Image src={`http://localhost:3000/${course.difficulty.icon}`} alt="daraja" width={13} height={17}/>
+                                <Image src={resolveImageUrl(course.difficulty.icon)} alt="daraja" width={13}
+                                       height={17}/>
                                 <p className="font-normal text-[14px]">{course.difficulty.title}</p>
                             </div>
                             <div className="flex gap-[8px] items-center">
@@ -132,21 +200,9 @@ export default function Page() {
                     <div
                         className="relative z-10 flex flex-col items-end justify-between h-full self-stretch space-y-4 md:space-y-0 min-w-[370px]">
                         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg self-end">
-                            <div className="flex gap-0.5 text-amber-400">
+                            <div className="flex gap-0.5">
                                 {[...Array(5)].map((_, i) => (
-                                    i < Math.floor(rating) ? (
-                                        <svg key={i} xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                             viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                                        </svg>
-                                    ) : (
-                                        <svg key={i} xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                            <path
-                                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                                        </svg>
-                                    )
+                                    <Image key={i} src={i < Math.floor(rating) ? "/icon-star-filled.svg" : "/icon-star-outline.svg"} alt="" width={14} height={14}/>
                                 ))}
                             </div>
                             <span className="text-sm font-bold text-white">{course.rating}</span>
@@ -154,26 +210,22 @@ export default function Page() {
                         </div>
 
                         <div className="flex gap-[12px] w-full justify-end mt-[50px]">
+                            {purchased ? (
+                                <div className="w-[220px] h-[50px] rounded-[8px] flex items-center justify-center gap-[8px]">
+                                    <Image src="/icon-check-green.svg" alt="" width={16} height={16}/>
+                                    <span className="text-[#82CC27] text-[16px] font-medium font-poppins">Sotib olingan</span>
+                                </div>
+                            ) : (
+                                <button
+                                    onClick={() => setPurchaseOpen(true)}
+                                    className="bg-[#1C92E0] hover:bg-[#177db3] w-[220px] h-[50px] rounded-[8px] px-[20px] flex gap-[10px] items-center justify-center font-medium text-[16px] text-white transition-all whitespace-nowrap">
+                                    Kursni sotib olish
+                                </button>
+                            )}
                             <button
-                                className="bg-[#1C92E0] hover:bg-[#177db3] w-[220px] h-[50px] rounded-[8px] px-[20px] flex gap-[10px] items-center justify-center font-medium text-[16px] text-white transition-all whitespace-nowrap">
-                                Kursni sotib olish
-                            </button>
-                            <button
-                                onClick={() => setLiked(!liked)}
+                                onClick={handleToggleLike}
                                 className="w-[50px] h-[50px] rounded-[8px] bg-[#14213d]/60 border-[#F7F9FA33] border-[1px] flex items-center justify-center hover:bg-[#1d2d50] transition-colors">
-                                {liked ? (
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                         fill="#e25555">
-                                        <path
-                                            d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
-                                    </svg>
-                                ) : (
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                         fill="none" stroke="white" strokeWidth="1.5">
-                                        <path
-                                            d="M19.5 12.572l-7.5 7.428l-7.5-7.428a5 5 0 1 1 7.5-6.566a5 5 0 1 1 7.5 6.572"/>
-                                    </svg>
-                                )}
+                                <Image src={liked ? "/red-heart.svg" : "/likes.svg"} alt="like" width={22} height={20}/>
                             </button>
                             <button
                                 className="w-[50px] h-[50px] rounded-[8px] bg-[#14213d]/60 border-[#F7F9FA33] border-[1px] flex items-center justify-center hover:bg-[#1d2d50] transition-colors active:scale-95">
@@ -184,16 +236,28 @@ export default function Page() {
                 </div>
                 <div className="flex mt-[50px]">
                     <div className="flex-1 gap-20">
-                        <CourseAccordion/>
+                        <CourseAccordion courseId={Number(id)}/>
                         <div className="h-[64px]"></div>
-                        <CourseComments/>
+                        <CourseComments courseId={Number(id)}/>
                     </div>
-                    <div className="w-[326px] flex justify-center">
+                    <div className="flex flex-col items-center gap-6 w-[370px]">
                         <Anons/>
+                        <DonationsBanner/>
                     </div>
                 </div>
             </div>
             <Footer/>
+            <PurchaseModal
+                open={purchaseOpen}
+                onClose={() => setPurchaseOpen(false)}
+                courseTitle={course?.title ?? ""}
+                price={course?.newPrice ?? course?.price ?? "0"}
+                onPurchased={() => {
+                    setPurchased(true);
+                    const token = getToken() ?? "";
+                    if (token && id) savePurchase(Number(id), token).catch(() => {});
+                }}
+            />
         </>
     );
 }

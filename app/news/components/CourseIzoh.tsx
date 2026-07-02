@@ -1,5 +1,31 @@
 "use client";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import Image from "next/image";
+import axios from "axios";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+
+interface ReviewUser {
+    id?: number;
+    fullName?: string;
+    name?: string;
+    image?: string;
+    avatar?: string;
+}
+
+interface ReviewRaw {
+    id: number;
+    userId?: ReviewUser | number;
+    fullName?: string;
+    userImage?: string;
+    courseId?: number;
+    rating?: number;
+    comment?: string;
+    text?: string;
+    createdAt?: string;
+    date?: string;
+    user?: ReviewUser;
+}
 
 interface Comment {
     id: number;
@@ -10,50 +36,70 @@ interface Comment {
     text: string;
 }
 
-const commentsData: Comment[] = [
-    {
-        id: 1,
-        author: "Jasurbek Narzullayev",
-        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop",
-        date: "7 Sentyabr 2022 y. 19:52",
-        rating: 4,
-        text: "2016 yilda Nyu-Yorkda Karjakin va Karlsen shaxmat toji uchun o'yinda uchrashishdi. Keyin Norvegiya chempioni tay-brekda g'alaba qozondi va chempionlik unvonini saqlab qoldi. 26 noyabr kuni Karlsen va Karuana 12-o'yinni o'tkazishadi. Oq qismlarni amerikalik boshqaradi."
-    },
-    {
-        id: 2,
-        author: "Muhammadamin Domlahonov",
-        avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&h=100&fit=crop",
-        date: "7 Sentyabr 2022 y. 19:52",
-        rating: 3,
-        text: "2016 yilda Nyu-Yorkda Karjakin va Karlsen shaxmat toji uchun o'yinda uchrashishdi. Keyin Norvegiya chempioni tay-brekda g'alaba qozondi va chempionlik unvonini saqlab qoldi. 26 noyabr kuni Karlsen va Karuana 12-o'yinni o'tkazishadi. Oq qismlarni amerikalik boshqaradi."
-    },
-    {
-        id: 3,
-        author: "Shoxruh Baxtiyorov",
-        avatar: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop",
-        date: "7 Sentyabr 2022 y. 19:52",
-        rating: 5,
-        text: "2016 yilda Nyu-Yorkda Karjakin va Karlsen shaxmat toji uchun o'yinda uchrashishdi. Keyin Norvegiya chempioni tay-brekda g'alaba qozondi va chempionlik unvonini saqlab qoldi. 26 noyabr kuni Karlsen va Karuana 12-o'yinni o'tkazishadi. Oq qismlarni amerikalik boshqaradi."
-    },
-    {
-        id: 4,
-        author: "Jasurbek Narzullayev",
-        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop",
-        date: "7 Sentyabr 2022 y. 19:52",
-        rating: 4,
-        text: "2016 yilda Nyu-Yorkda Karjakin va Karlsen shaxmat toji uchun o'yinda uchrashishdi. Keyin Norvegiya chempioni tay-brekda g'alaba qozondi va chempionlik unvonini saqlab qoldi. 26 noyabr kuni Karlsen va Karuana 12-o'yinni o'tkazishadi. Oq qismlarni amerikalik boshqaradi."
+function formatDate(dateStr: string): string {
+    try {
+        const d = new Date(dateStr);
+        const months = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
+        const day = d.getDate();
+        const month = months[d.getMonth()];
+        const year = d.getFullYear();
+        const hours = String(d.getHours()).padStart(2, "0");
+        const mins = String(d.getMinutes()).padStart(2, "0");
+        return `${day} ${month} ${year} y. ${hours}:${mins}`;
+    } catch {
+        return dateStr;
     }
-];
+}
 
-export default function CourseComments() {
+function mapReview(r: ReviewRaw): Comment {
+    const userObj = typeof r.userId === "object" ? r.userId : (r.user ?? null);
+    const fullName = userObj?.fullName ?? userObj?.name ?? r.fullName ?? "Foydalanuvchi";
+    const rawImage = userObj?.image ?? userObj?.avatar ?? r.userImage ?? "";
+    const avatar = rawImage
+        ? (rawImage.startsWith("http") ? rawImage : `${API_URL}/${rawImage}`)
+        : `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=1A1D1F&color=9DA1A3`;
+    return {
+        id: r.id,
+        author: fullName,
+        avatar,
+        date: formatDate(r.createdAt ?? r.date ?? ""),
+        rating: r.rating ?? 0,
+        text: r.comment ?? r.text ?? "",
+    };
+}
+
+async function fetchReviews(courseId: number): Promise<ReviewRaw[]> {
+    try {
+        const {data} = await axios.get(`${API_URL}/public/courseReviews?size=500`);
+        const all: ReviewRaw[] = Array.isArray(data) ? data : (data?.data ?? []);
+        return all.filter(r => Number(r.courseId) === courseId);
+    } catch {
+        return [];
+    }
+}
+
+export default function CourseComments({courseId}: { courseId: number }) {
+    const [comments, setComments] = useState<Comment[]>([]);
+    const [loading, setLoading] = useState(true);
     const [activeReportId, setActiveReportId] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (!courseId) return;
+        setLoading(true);
+        fetchReviews(courseId).then(list => {
+            setComments(list.map(mapReview));
+            setLoading(false);
+        });
+    }, [courseId]);
+
+    if (loading || comments.length === 0) return null;
 
     return (
         <div className="w-full font-sans text-white">
             <h2 className="text-[28px] font-bold mb-[13px]">Kurs haqida izohlar</h2>
 
             <div className="flex flex-col gap-6 bg-[#1A1D1F] p-[20px] border border-[#1F272A] rounded-[12px]">
-                {commentsData.map((comment) => (
+                {comments.map((comment) => (
                     <div
                         key={comment.id}
                         className="relative flex gap-4 pb-6 border-b border-[#2C2F31]/40 last:border-none"
@@ -68,29 +114,21 @@ export default function CourseComments() {
 
                         <div className="flex flex-col gap-2 pr-8 w-full">
                             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-                                 <span className="font-semibold text-[15px] text-[#f0f4f8]">
-                                     {comment.author}
-                                 </span>
-
+                                <span className="font-semibold text-[15px] text-[#f0f4f8]">
+                                    {comment.author}
+                                </span>
                             </div>
                             <div className="flex gap-5">
-                        <span className="text-[12px] text-[#9DA1A3]">
-                            {comment.date}
-                        </span>
+                                <span className="text-[12px] text-[#9DA1A3]">{comment.date}</span>
                                 <div className="flex items-center gap-0.5">
                                     {[...Array(5)].map((_, index) => (
-                                        <svg
+                                        <Image
                                             key={index}
-                                            width="14"
-                                            height="14"
-                                            viewBox="0 0 24 24"
-                                            fill={index < comment.rating ? "#F59E0B" : "none"}
-                                            stroke={index < comment.rating ? "#F59E0B" : "#4A4D50"}
-                                            strokeWidth="2"
-                                        >
-                                            <polygon
-                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                        </svg>
+                                            src={index < comment.rating ? "/icon-star-filled.svg" : "/icon-star-outline.svg"}
+                                            alt=""
+                                            width={14}
+                                            height={14}
+                                        />
                                     ))}
                                 </div>
                             </div>
@@ -104,24 +142,15 @@ export default function CourseComments() {
                                 onClick={() => setActiveReportId(activeReportId === comment.id ? null : comment.id)}
                                 className="p-1 text-[#9DA1A3] hover:text-white rounded-full hover:bg-white/5 transition-colors"
                             >
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     strokeWidth="2.5">
-                                    <circle cx="12" cy="5" r="1"/>
-                                    <circle cx="12" cy="12" r="1"/>
-                                    <circle cx="12" cy="19" r="1"/>
-                                </svg>
+                                <Image src="/icon-dots-vertical.svg" alt="" width={20} height={20}/>
                             </button>
 
                             {activeReportId === comment.id && (
                                 <>
                                     <div className="fixed inset-0 z-10" onClick={() => setActiveReportId(null)}/>
-
                                     <div
                                         className="absolute right-0 mt-2 z-20 bg-[#1A1D1F] border border-[#2C2F31] rounded-[6px] shadow-2xl p-[10px] w-[140px] flex items-center gap-2 cursor-pointer hover:bg-white/[0.03] transition-colors select-none">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B">
-                                            <path
-                                                d="M12 2L1 21h22L12 2zm0 4l7.5 13h-15L12 6zm-1 3v4h2V9h-2zm0 6v2h2v-2h-2z"/>
-                                        </svg>
+                                        <Image src="/icon-warning.svg" alt="" width={14} height={14}/>
                                         <span className="text-[13px] font-medium text-[#D0DCE8]">Shikoyat qilish</span>
                                     </div>
                                 </>

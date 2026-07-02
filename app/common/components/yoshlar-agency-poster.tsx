@@ -3,10 +3,10 @@ import Anons from "@/app/common/components/Anons";
 import Image from "next/image";
 
 export default function YoshlarAgencyPoster() {
-    return <div className="flex flex-col w-[326px] items-center gap-6">
+    return <div className="flex flex-col w-[326px] items-center gap-6 ml-[10px]">
         <Anons/>
         <div
-            className="w-[326px] h-[471px] bg-[#121C26] rounded-[20px] ml-[20px] flex flex-col items-center justify-between p-[36px]">
+            className="w-[326px] h-[471px] bg-[#121C26] rounded-[20px] flex flex-col items-center justify-between p-[36px]">
             <Image src="/Subtract.svg" alt="gerb" className="text-[#FFFFFF] opacity-10 absolute mt-[-20px]" width={326} height={469}/>
             <div className="w-[175px] h-[38px] flex gap-1">
                 <Image src="/image%20107.svg" alt="gerp" width={38} height={38}/>

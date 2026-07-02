@@ -7,7 +7,7 @@ import Anons from "@/app/common/components/Anons";
 import BookItem from "@/app/common/components/Book/BookItem";
 import Footer from "@/app/common/components/Footer/Footer";
 import HeaderItem from "@/app/common/components/Header/Header";
-import Image from "next/image"; // Header'ni ham qo'shib qo'ydim
+import Image from "next/image";
 
 interface NewsItemData {
     id: number;
@@ -17,7 +17,6 @@ interface NewsItemData {
     image: string;
 }
 
-// Portni asosiy sahifadagidek 3000 deb belgilaymiz
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 function formatDate(dateStr: string): string {
@@ -152,11 +151,7 @@ export default function NewsDetail() {
                                     <button
                                         className="flex items-center gap-1.5 bg-[#0D0F10] border border-[#1F272A] hover:bg-[#262A2D] text-white px-3 py-1.5 rounded-[8px] text-[12px] cursor-pointer">
                                         <span>Поделиться</span>
-                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                             viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                                  d="M8.684 10.742l4.628-2.2a3 3 0 11.83 1.666l-4.628 2.2a3 3 0 01-.83-1.666zM13.316 13.258l-4.628 2.2a3 3 0 10.83 1.666l4.628-2.2a3 3 0 00-.83-1.666z"/>
-                                        </svg>
+                                        <Image src="/icon-share.svg" alt="" width={14} height={14}/>
                                     </button>
                                 </div>
                             </div>
@@ -172,11 +167,7 @@ export default function NewsDetail() {
                                         className="text-[#9DA1A3] hover:text-white text-[13px] flex items-center gap-1 cursor-pointer bg-transparent border-none"
                                     >
                                         Barcha yangiliklar
-                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                             viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                                  d="M9 5l7 7-7 7"/>
-                                        </svg>
+                                        <Image src="/icon-chevron-right-sm.svg" alt="" width={14} height={14}/>
                                     </button>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -201,7 +192,8 @@ export default function NewsDetail() {
                         )}
                     </div>
 
-                    <aside className="w-full lg:w-[326px] shrink-0 flex flex-col gap-6 mt-[-20px]">
+                    <aside className="w-[326px] mt-[25px] flex flex-col gap-6 items-center">
+                        <Anons/>
                         <BookItem/>
                     </aside>
                 </div>

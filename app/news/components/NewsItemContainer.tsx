@@ -4,6 +4,8 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import Image from "next/image";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+
 
 interface NewsType {
     id: number;
@@ -22,13 +24,12 @@ export default function NewsItemContainer({search}: { search: string }) {
 
     useEffect(() => {
         async function getAllNews() {
-            const response = await axios.get(`http://localhost:3000/public/news?search=${search}`);
-            console.log(response.data)
+            const response = await axios.get(`${API_URL}/public/news?search=${search}`);
             setNews(response.data.data);
         }
 
         getAllNews();
-    }, [search]); // dependency array
+    }, [search]);
 
     const loadMore = () => {
         setShown((prev) => prev + STEP);

@@ -1,19 +1,17 @@
 "use client"
 import {useRouter} from "next/navigation";
 import Image from "next/image";
+import axios from "axios";
+import {getToken} from "@/app/common/components/Auth/authApi";
+import {resolveImageUrl} from "@/app/common/utils/imageUrl";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 export default function BookItem({
-                                     author,
-                                     category,
-                                     language,
-                                     difficulty,
-                                     title,
-                                     image,
-                                     price,
-                                     newPrice,
-                                     rating,
-                                     id
-                                 }: {
+    author, category, language, difficulty,
+    title, image, price, newPrice, rating, id,
+    liked = false, onToggleLike, inCart = false, onAddToCart,
+}: {
     author: any,
     category: any,
     language: any,
@@ -23,12 +21,29 @@ export default function BookItem({
     price: number,
     newPrice: number,
     rating: number,
-    id: any
+    id: any,
+    liked?: boolean,
+    onToggleLike?: () => void,
+    inCart?: boolean,
+    onAddToCart?: () => void,
 }) {
 
     let newPrice1 = Number(newPrice)
     let price1 = Number(price)
     const router = useRouter()
+
+    async function handleAddToCart(e: React.MouseEvent) {
+        e.stopPropagation();
+        if (inCart) return;
+        const token = getToken() ?? "";
+        if (!token) return;
+        try {
+            await axios.post(`${API_URL}/public/cart`, {
+                target: "book", targetId: id, quantity: 1,
+            }, {headers: {Authorization: `Bearer ${token}`}});
+            onAddToCart?.();
+        } catch {}
+    }
 
     return <div
         onClick={() => router.push(`/book/${id}`)}
@@ -53,7 +68,7 @@ export default function BookItem({
                 </div>
                 <div className="w-[369px] h-[24px] flex gap-4">
                     <div className="flex gap-1">
-                        <Image src={`http://localhost:3000/${difficulty.icon}`} alt='Image'
+                        <Image src={resolveImageUrl(difficulty.icon)} alt='Image'
                                className="object-cover w-[13px] h-[17.33px]" width={13} height={17}/>
                         <p className="text-[#F7F9FA99] w-[90px] h-[18px] font-normal text-[14px] mr-[-15px]">{difficulty.title}</p>
                     </div>
@@ -71,10 +86,21 @@ export default function BookItem({
             </div>
             <div className="flex justify-between h-[40px] mt-[7px]">
                 <button
-                    className="bg-[#FFFFFF1A] w-[198px] h-[40px] rounded-[8px] mt-[24px] p-[10px] flex gap-[10px] items-center justify-center font-medium text-[16px] hover:bg-[#1C92E0] transition-transform duration-300 hover:scale-102">
-                    <Image src="/HeaderImage/icon3.svg" alt="savatcha" className="" width={20} height={20}/>Savatchaga
+                    onClick={handleAddToCart}
+                    className={`w-[198px] h-[40px] rounded-[8px] mt-[24px] p-[10px] flex gap-[10px] items-center justify-center font-medium text-[16px] text-white transition-all duration-300 ${
+                        inCart
+                            ? "bg-[#FFFFFF1A] cursor-default"
+                            : "bg-[#1C92E0] hover:bg-[#177db3] hover:scale-102"
+                    }`}>
+                    <Image src={inCart ? "/cart-check.svg" : "/HeaderImage/icon3.svg"} alt="savatcha" width={20} height={20}/>
+                    {inCart ? "Savatchada" : "Savatchaga"}
                 </button>
-                <Image src="/likes.svg" alt="likes" className="w-[19.4px] h-[18px] mt-[30px] ml-[280px]" width={19} height={18}/>
+                <button
+                    onClick={(e) => { e.stopPropagation(); onToggleLike?.(); }}
+                    className="mt-[30px] ml-auto hover:opacity-70 transition-opacity"
+                >
+                    <Image src={liked ? "/red-heart.svg" : "/likes.svg"} alt="like" width={20} height={18}/>
+                </button>
             </div>
         </div>
     </div>
