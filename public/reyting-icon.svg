@@ -1,0 +1,13 @@
+<svg width="44" height="44" viewBox="55 55 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M60.5 55.3334H93.5" stroke="#1C92E0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M76.9997 77.3333V84.6666" stroke="#1C92E0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M71.5 84.6667H82.5" stroke="#1C92E0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M91.666 73.6663C91.666 75.6913 90.0249 77.3331 88 77.3333H66C63.975 77.3333 62.333 75.6914 62.333 73.6663L68.7227 69.6722C68.6015 70.0225 68.6804 70.4265 68.96 70.7064C69.3505 71.0969 69.9835 71.0969 70.374 70.7064L75.167 65.9134L78.127 68.8734C78.5175 69.2637 79.1505 69.2638 79.541 68.8734L85.041 63.3734C85.4311 62.9829 85.4313 62.3497 85.041 61.9593C84.6506 61.5691 84.0174 61.5692 83.627 61.9593L78.834 66.7523L76.7422 64.6605L91.666 55.3333V73.6663Z" fill="#1C92E0"/>
+<circle cx="77" cy="77" r="22" fill="url(#glow_836_37032)"/>
+<defs>
+<radialGradient id="glow_836_37032" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(77 77) scale(22)">
+<stop offset="0%" stop-color="#1C92E0" stop-opacity="0.3"/>
+<stop offset="100%" stop-color="#1C92E0" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>
