@@ -7,10 +7,11 @@ import CourseItem from "@/app/courses/components/CourseItem";
 import Image from "next/image";
 import {getToken} from "@/app/common/components/Auth/authApi";
 import {fetchLikedCourseIds, toggleCourseLike} from "@/app/common/api/likeApi";
+import {EMPTY_FILTERS, EntityFilters, toFilterParams} from "@/app/common/api/filterOptionsApi";
 
 const STEP = 4;
 
-export default function CourseItemContainer({search}: { search: string }) {
+export default function CourseItemContainer({search, filters = EMPTY_FILTERS}: { search: string; filters?: EntityFilters }) {
     const [course, setCourse] = useState<{
         id: number,
         author: any,
@@ -29,11 +30,14 @@ export default function CourseItemContainer({search}: { search: string }) {
 
     useEffect(() => {
         async function getAllCourse() {
-            const response = await axios.get(`${API_URL}/public/courses?search=${search}`)
+            const response = await axios.get(`${API_URL}/public/courses`, {
+                params: {search, ...toFilterParams(filters)},
+            })
             setCourse(response.data.data)
+            setShown(STEP)
         }
         getAllCourse()
-    }, [search])
+    }, [search, filters])
 
     useEffect(() => {
         const token = getToken() ?? "";

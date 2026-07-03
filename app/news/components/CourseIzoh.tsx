@@ -2,6 +2,7 @@
 import {useEffect, useState} from "react";
 import Image from "next/image";
 import axios from "axios";
+import ReportModal from "@/app/common/components/ReportModal";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -82,6 +83,7 @@ export default function CourseComments({courseId}: { courseId: number }) {
     const [comments, setComments] = useState<Comment[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeReportId, setActiveReportId] = useState<number | null>(null);
+    const [reportTarget, setReportTarget] = useState<number | null>(null);
 
     useEffect(() => {
         if (!courseId) return;
@@ -149,6 +151,7 @@ export default function CourseComments({courseId}: { courseId: number }) {
                                 <>
                                     <div className="fixed inset-0 z-10" onClick={() => setActiveReportId(null)}/>
                                     <div
+                                        onClick={() => { setReportTarget(comment.id); setActiveReportId(null); }}
                                         className="absolute right-0 mt-2 z-20 bg-[#1A1D1F] border border-[#2C2F31] rounded-[6px] shadow-2xl p-[10px] w-[140px] flex items-center gap-2 cursor-pointer hover:bg-white/[0.03] transition-colors select-none">
                                         <Image src="/icon-warning.svg" alt="" width={14} height={14}/>
                                         <span className="text-[13px] font-medium text-[#D0DCE8]">Shikoyat qilish</span>
@@ -165,6 +168,10 @@ export default function CourseComments({courseId}: { courseId: number }) {
                     Barcha izohlar
                 </button>
             </div>
+
+            {reportTarget !== null && (
+                <ReportModal target="courseReview" targetId={reportTarget} onClose={() => setReportTarget(null)}/>
+            )}
         </div>
     );
 }

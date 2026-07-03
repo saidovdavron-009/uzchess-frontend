@@ -8,9 +8,11 @@ import DonationsBanner from "@/app/common/components/donationsBanner";
 import Footer from "@/app/common/components/Footer/Footer";
 import Image from "next/image";
 import Anons from "@/app/common/components/Anons";
+import {EMPTY_FILTERS, EntityFilters} from "@/app/common/api/filterOptionsApi";
 
 export default function Page() {
     const [search, setSearch] = useState("")
+    const [filters, setFilters] = useState<EntityFilters>(EMPTY_FILTERS)
     return <div className="flex flex-col">
         <HeaderItem/>
         <div className="flex gap-2 w-[1374px] h-[44px] items-center pl-[30px] ml-[34px]">
@@ -27,7 +29,7 @@ export default function Page() {
                            height={44}/>
                     <h1 className="w-[121px] h-[42px] text-[32px] font-bold mb-[12px]">Kurslar</h1>
                 </div>
-                <CourseFilters/>
+                <CourseFilters filters={filters} onChange={setFilters}/>
             </div>
             <div className="ml-[10px]">
                 <input type="text"
@@ -35,7 +37,7 @@ export default function Page() {
                        value={search}
                        onChange={(e) => setSearch(e.target.value)}
                        className="w-[676px] h-[52px] py-[14px] px-[16px] bg-[#15181A] rounded-[8px] border-[#232627] border-[2px] outline-none"/>
-                <CourseItemContainer search={search}/>
+                <CourseItemContainer search={search} filters={filters}/>
             </div>
             <div className="flex flex-col items-center gap-6 w-[370px]">
                 <Anons/>

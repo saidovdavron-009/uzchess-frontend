@@ -5,31 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c8216732-319f-4390-8e07-269b5b0699d4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/book/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/book/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/book/components/BookItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/book/components/BookItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/book/components/BookFilterItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/book/components/BookFilterItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/book/components/BookFilters.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/book/components/BookFilters.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/book/components/BookItemContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/book/components/BookItemContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/common/components/Anons.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/components/Anons.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/common/components/Book/BookItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/components/Book/BookItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/common/components/Header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/components/Header/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/common/components/donationsBanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/components/donationsBanner.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/common/components/yoshlar-agency-poster.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/components/yoshlar-agency-poster.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/book/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/book/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/common/components/Auth/authApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/components/Auth/authApi.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/courses/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/[id]/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/courses/components/Accardion.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/components/Accardion.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/courses/components/CourseItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/components/CourseItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/courses/components/CourseFilterItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/components/CourseFilterItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/courses/components/CourseFilters.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/components/CourseFilters.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/courses/components/CourseItemContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/components/CourseItemContainer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/courses/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/news/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/news/[id]/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/news/components/CourseIzoh.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/news/components/CourseIzoh.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/news/components/NewsItemContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/news/components/NewsItemContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/news/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/news/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/cash-outline 1.svg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +135,8 @@
       <workItem from="1782911966813" duration="13000" />
       <workItem from="1782912171720" duration="13000" />
       <workItem from="1782912299135" duration="518000" />
-      <workItem from="1782951573838" duration="3163000" />
+      <workItem from="1782951573838" duration="30933000" />
+      <workItem from="1783036710151" duration="19292000" />
     </task>
     <servers />
   </component>

@@ -7,9 +7,11 @@ import BookItemContainer from "@/app/book/components/BookItemContainer";
 import YoshlarAgencyPoster from "@/app/common/components/yoshlar-agency-poster";
 import Footer from "@/app/common/components/Footer/Footer";
 import Image from "next/image";
+import {EMPTY_FILTERS, EntityFilters} from "@/app/common/api/filterOptionsApi";
 
 export default function BookPages() {
     const [search, setSearch] = useState("")
+    const [filters, setFilters] = useState<EntityFilters>(EMPTY_FILTERS)
     return <div className="flex flex-col">
         <HeaderItem/>
         <div className="flex gap-2 w-[1374px] h-[44px] items-center pl-[30px] ml-[34px]">
@@ -25,7 +27,7 @@ export default function BookPages() {
                     <Image src="/books.svg" alt="eduIcon" className="object-cover ml-[54px]" width={70} height={44}/>
                     <h1 className="w-[121px] h-[42px] text-[32px] font-bold mb-[12px]">Kutubxona</h1>
                 </div>
-                <BookFilters/>
+                <BookFilters filters={filters} onChange={setFilters}/>
             </div>
             <div className="ml-[10px]">
                 <input type="text"
@@ -33,7 +35,7 @@ export default function BookPages() {
                        value={search}
                        onChange={(e) => setSearch(e.target.value)}
                        className="w-[676px] h-[52px] py-[14px] px-[16px] bg-[#15181A] rounded-[8px] border-[#232627] border-[2px] outline-none"/>
-                <BookItemContainer search={search}/>
+                <BookItemContainer search={search} filters={filters}/>
             </div>
             <YoshlarAgencyPoster/>
         </div>

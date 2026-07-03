@@ -8,7 +8,7 @@ import Anons from "@/app/common/components/Anons";
 import axios from "axios";
 import {useParams} from "next/navigation";
 import CourseComments from "@/app/news/components/CourseIzoh";
-import DonationsBanner from "@/app/common/components/donationsBanner";
+import ContinueWatchingCard from "@/app/courses/components/ContinueWatchingCard";
 import {getToken} from "@/app/common/components/Auth/authApi";
 import {toggleCourseLike, fetchLikedCourseIds} from "@/app/common/api/likeApi";
 import PurchaseModal from "@/app/courses/components/PurchaseModal";
@@ -242,7 +242,7 @@ export default function Page() {
                     </div>
                     <div className="flex flex-col items-center gap-6 w-[370px]">
                         <Anons/>
-                        <DonationsBanner/>
+                        <ContinueWatchingCard courseId={Number(id)}/>
                     </div>
                 </div>
             </div>

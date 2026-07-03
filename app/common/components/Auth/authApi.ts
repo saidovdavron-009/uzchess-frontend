@@ -50,6 +50,10 @@ export function getToken(): string | null {
     return localStorage.getItem(TOKEN_KEY);
 }
 
+export function getUserId(token: string): number | null {
+    return decodeToken(token)?.id ?? null;
+}
+
 function decodeToken(token: string): { id: number; login: string; role: string } | null {
     try {
         const payload = token.split(".")[1];

@@ -5,11 +5,12 @@ import BookItem from "@/app/book/components/BookItem";
 import Image from "next/image";
 import {getToken} from "@/app/common/components/Auth/authApi";
 import {fetchLikedBookIds, toggleBookLike} from "@/app/common/api/likeApi";
+import {EMPTY_FILTERS, EntityFilters, toFilterParams} from "@/app/common/api/filterOptionsApi";
 
 const STEP = 6;
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
-export default function BookItemContainer({search}: { search: string }) {
+export default function BookItemContainer({search, filters = EMPTY_FILTERS}: { search: string; filters?: EntityFilters }) {
     const [book, setBook] = useState<{
         id: number,
         author: any,
@@ -28,11 +29,14 @@ export default function BookItemContainer({search}: { search: string }) {
 
     useEffect(() => {
         async function getAllBooks() {
-            const response = await axios.get(`${API_URL}/public/book?search=${search}`)
+            const response = await axios.get(`${API_URL}/public/book`, {
+                params: {search, ...toFilterParams(filters)},
+            })
             setBook(response.data.data)
+            setShown(STEP)
         }
         getAllBooks()
-    }, [search])
+    }, [search, filters])
 
     useEffect(() => {
         const token = getToken() ?? "";
