@@ -12,7 +12,9 @@ import ContinueWatchingCard from "@/app/courses/components/ContinueWatchingCard"
 import {getToken} from "@/app/common/components/Auth/authApi";
 import {toggleCourseLike, fetchLikedCourseIds} from "@/app/common/api/likeApi";
 import PurchaseModal from "@/app/courses/components/PurchaseModal";
+import ShareModal from "@/app/courses/components/ShareModal";
 import {resolveImageUrl} from "@/app/common/utils/imageUrl";
+import {checkCoursePurchased} from "@/app/courses/utils/lessonHelpers";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -23,31 +25,6 @@ function getUserIdFromToken(token: string): number | null {
         return decoded.id ?? null;
     } catch {
         return null;
-    }
-}
-
-async function checkPurchased(courseId: number, token: string): Promise<boolean> {
-    try {
-        const userId = getUserIdFromToken(token);
-        if (!userId) return false;
-        const {data} = await axios.get(`${API_URL}/public/purchasedCourse?size=200`, {
-            headers: {Authorization: `Bearer ${token}`},
-        });
-        const list: {id: number; userId: number | {id: number}}[] =
-            Array.isArray(data) ? data : (data.data ?? []);
-        const mine = list.filter(item => {
-            const uid = typeof item.userId === "object" ? item.userId?.id : item.userId;
-            return Number(uid) === userId;
-        });
-        for (const item of mine) {
-            const {data: detail} = await axios.get(`${API_URL}/public/purchasedCourse/${item.id}`, {
-                headers: {Authorization: `Bearer ${token}`},
-            });
-            if (Number(detail.courseId) === courseId) return true;
-        }
-        return false;
-    } catch {
-        return false;
     }
 }
 
@@ -85,6 +62,7 @@ export default function Page() {
     const [loading, setLoading] = useState(true);
     const [purchaseOpen, setPurchaseOpen] = useState(false);
     const [purchased, setPurchased] = useState(false);
+    const [shareOpen, setShareOpen] = useState(false);
 
     useEffect(() => {
         async function getCourse() {
@@ -106,7 +84,7 @@ export default function Page() {
         const token = getToken() ?? "";
         if (!token || !id) return;
         fetchLikedCourseIds(token).then(ids => setLiked(ids.has(Number(id))));
-        checkPurchased(Number(id), token).then(setPurchased);
+        checkCoursePurchased(Number(id), token).then(setPurchased);
     }, [id]);
 
     async function handleToggleLike() {
@@ -228,6 +206,7 @@ export default function Page() {
                                 <Image src={liked ? "/red-heart.svg" : "/likes.svg"} alt="like" width={22} height={20}/>
                             </button>
                             <button
+                                onClick={() => setShareOpen(true)}
                                 className="w-[50px] h-[50px] rounded-[8px] bg-[#14213d]/60 border-[#F7F9FA33] border-[1px] flex items-center justify-center hover:bg-[#1d2d50] transition-colors active:scale-95">
                                 <Image src="/share.svg" alt="share icon" width={18} height={18}/>
                             </button>
@@ -236,7 +215,7 @@ export default function Page() {
                 </div>
                 <div className="flex mt-[50px]">
                     <div className="flex-1 gap-20">
-                        <CourseAccordion courseId={Number(id)}/>
+                        <CourseAccordion courseId={Number(id)} purchased={purchased} onRequestPurchase={() => setPurchaseOpen(true)}/>
                         <div className="h-[64px]"></div>
                         <CourseComments courseId={Number(id)}/>
                     </div>
@@ -257,6 +236,11 @@ export default function Page() {
                     const token = getToken() ?? "";
                     if (token && id) savePurchase(Number(id), token).catch(() => {});
                 }}
+            />
+            <ShareModal
+                open={shareOpen}
+                onClose={() => setShareOpen(false)}
+                url={typeof window !== "undefined" ? window.location.href : ""}
             />
         </>
     );

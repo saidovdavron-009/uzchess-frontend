@@ -76,21 +76,63 @@ export interface LessonProgressInfo {
     lesson: Lesson;
     status: LessonStatus;
     reachable: boolean;
+    accessAllowed: boolean;
     record: UserLessonRecord | undefined;
 }
 
-export function computeLessonStatuses(orderedLessons: Lesson[], progress: Map<number, UserLessonRecord>): LessonProgressInfo[] {
-    const firstIncompleteIndex = orderedLessons.findIndex(l => !progress.get(l.id)?.isCompleted);
-    return orderedLessons.map((lesson, i) => {
+export function computeLessonStatuses(
+    orderedLessons: Lesson[],
+    progress: Map<number, UserLessonRecord>,
+    purchased: boolean,
+): LessonProgressInfo[] {
+    let previousCompleted = true;
+    return orderedLessons.map((lesson) => {
         const record = progress.get(lesson.id);
-        const reachable = firstIncompleteIndex === -1 || i <= firstIncompleteIndex;
+        const accessAllowed = purchased || lesson.isFree === true;
+        const reachable = accessAllowed && previousCompleted;
+        if (accessAllowed) previousCompleted = record?.isCompleted === true;
         let status: LessonStatus;
         if (record?.isCompleted) status = "completed";
         else if (!reachable) status = "locked";
         else if (record && (record.stoppedAt ?? 0) > 0) status = "in-progress";
         else status = "unlocked";
-        return {lesson, status, reachable, record};
+        return {lesson, status, reachable, accessAllowed, record};
     });
+}
+
+function getUserIdFromToken(token: string): number | null {
+    try {
+        const payload = token.split(".")[1];
+        const decoded = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
+        return decoded.id ?? null;
+    } catch {
+        return null;
+    }
+}
+
+export async function checkCoursePurchased(courseId: number, token: string): Promise<boolean> {
+    try {
+        const userId = getUserIdFromToken(token);
+        if (!userId) return false;
+        const {data} = await axios.get(`${API_URL}/public/purchasedCourse?size=200`, {
+            headers: {Authorization: `Bearer ${token}`},
+        });
+        const list: {id: number; userId: number | {id: number}}[] =
+            Array.isArray(data) ? data : (data.data ?? []);
+        const mine = list.filter(item => {
+            const uid = typeof item.userId === "object" ? item.userId?.id : item.userId;
+            return Number(uid) === userId;
+        });
+        for (const item of mine) {
+            const {data: detail} = await axios.get(`${API_URL}/public/purchasedCourse/${item.id}`, {
+                headers: {Authorization: `Bearer ${token}`},
+            });
+            if (Number(detail.courseId) === courseId) return true;
+        }
+        return false;
+    } catch {
+        return false;
+    }
 }
 
 export async function fetchCourseSectionsWithLessons(courseId: number): Promise<Section[]> {

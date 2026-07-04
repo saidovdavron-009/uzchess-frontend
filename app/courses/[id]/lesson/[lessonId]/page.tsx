@@ -9,6 +9,7 @@ import Anons from "@/app/common/components/Anons";
 import {getToken, getUserId} from "@/app/common/components/Auth/authApi";
 import {fetchUserLessonProgress, saveLessonProgress, UserLessonRecord} from "@/app/courses/api/userLessonApi";
 import {
+    checkCoursePurchased,
     computeLessonStatuses,
     fetchCourseSectionsWithLessons,
     formatDuration,
@@ -30,6 +31,7 @@ export default function LessonWatchPage() {
     const currentLessonId = Number(lessonId);
 
     const [courseTitle, setCourseTitle] = useState("");
+    const [purchased, setPurchased] = useState(false);
     const [sections, setSections] = useState<Section[]>([]);
     const [progress, setProgress] = useState<Map<number, UserLessonRecord>>(new Map());
     const [userId, setUserId] = useState<number | null>(null);
@@ -38,11 +40,14 @@ export default function LessonWatchPage() {
     const [nextDuration, setNextDuration] = useState(0);
     const [showCourseCompleted, setShowCourseCompleted] = useState(false);
     const progressRef = useRef(progress);
+    const saveChainRef = useRef<Map<number, Promise<void>>>(new Map());
     const token = getToken();
 
-    useEffect(() => {
-        progressRef.current = progress;
-    }, [progress]);
+    function updateProgress(updater: (prev: Map<number, UserLessonRecord>) => Map<number, UserLessonRecord>) {
+        const next = updater(progressRef.current);
+        progressRef.current = next;
+        setProgress(next);
+    }
 
     useEffect(() => {
         if (!courseId || isNaN(courseId)) return;
@@ -62,48 +67,63 @@ export default function LessonWatchPage() {
         const uid = getUserId(token);
         setUserId(uid);
         if (!uid) return;
-        fetchUserLessonProgress(token, uid).then(setProgress);
+        fetchUserLessonProgress(token, uid).then(records => {
+            progressRef.current = records;
+            setProgress(records);
+        });
     }, [token]);
 
+    useEffect(() => {
+        if (!token || !courseId || isNaN(courseId)) return;
+        checkCoursePurchased(courseId, token).then(setPurchased);
+    }, [token, courseId]);
+
     const orderedLessons = sections.flatMap(s => s.lessons ?? []);
-    const statuses = computeLessonStatuses(orderedLessons, progress);
+    const statuses = computeLessonStatuses(orderedLessons, progress, purchased);
     const currentIndex = orderedLessons.findIndex(l => l.id === currentLessonId);
     const currentLesson = orderedLessons[currentIndex];
-    const currentInfo = statuses[currentIndex];
     const prevLesson = orderedLessons[currentIndex - 1];
     const nextLesson = orderedLessons[currentIndex + 1];
     const nextInfo = statuses[currentIndex + 1];
 
     async function handleProgress(seconds: number, completed: boolean) {
         if (!token || !userId || !currentLesson) return;
+        const lessonId = currentLesson.id;
         const stoppedAt = Math.floor(seconds);
-        const existing = progressRef.current.get(currentLesson.id);
 
-        setProgress(prev => {
-            const next = new Map(prev);
-            next.set(currentLesson.id, {
-                id: existing?.id ?? 0,
-                userid: userId,
-                CourseLessonId: currentLesson.id,
-                stoppedAt,
-                isCompleted: completed,
-            });
-            return next;
-        });
+        const prevChain = saveChainRef.current.get(lessonId) ?? Promise.resolve();
+        const chain = prevChain.then(async () => {
+            const existing = progressRef.current.get(lessonId);
+            const effectiveCompleted = completed || existing?.isCompleted === true;
 
-        const savedId = await saveLessonProgress(token, userId, currentLesson.id, existing?.id ?? null, stoppedAt, completed);
-        if (savedId && savedId !== existing?.id) {
-            setProgress(prev => {
+            updateProgress(prev => {
                 const next = new Map(prev);
-                const rec = next.get(currentLesson.id);
-                if (rec) next.set(currentLesson.id, {...rec, id: savedId});
+                next.set(lessonId, {
+                    id: existing?.id ?? 0,
+                    userid: userId,
+                    CourseLessonId: lessonId,
+                    stoppedAt,
+                    isCompleted: effectiveCompleted,
+                });
                 return next;
             });
-        }
 
-        if (completed && currentIndex === orderedLessons.length - 1) {
-            setShowCourseCompleted(true);
-        }
+            const savedId = await saveLessonProgress(token, userId, lessonId, existing?.id ?? null, stoppedAt, effectiveCompleted);
+            if (savedId && savedId !== existing?.id) {
+                updateProgress(prev => {
+                    const next = new Map(prev);
+                    const rec = next.get(lessonId);
+                    if (rec) next.set(lessonId, {...rec, id: savedId});
+                    return next;
+                });
+            }
+
+            if (completed && currentIndex === orderedLessons.length - 1) {
+                setShowCourseCompleted(true);
+            }
+        });
+        saveChainRef.current.set(lessonId, chain);
+        await chain;
     }
 
     function goToLesson(lesson: Lesson, reachable: boolean) {
@@ -136,11 +156,11 @@ export default function LessonWatchPage() {
             <HeaderItem/>
             <div className="flex gap-3 w-[1374px] h-[44px] items-center pl-[30px] ml-[34px]">
                 <Image src="/NewsImage/icon8.svg" alt="icon" width={20} height={20} className="w-5 h-5"/>
-                <h4 className="text-[#6D7274] font-medium mb-1">Asosiy</h4>
-                <Image src="/NewsImage/icon7.svg" alt="icon" width={8} height={8} className="w-2 h-2 mt-2 mb-[2px]"/>
-                <h4 className="text-[#6D7274] font-medium mb-1">Kurslar</h4>
-                <Image src="/NewsImage/icon7.svg" alt="icon" width={8} height={8} className="w-2 h-2 mt-2 ml-[4px] mb-[2px]"/>
-                <h4 className="text-white font-medium mb-1">{courseTitle}</h4>
+                <h4 className="text-[#6D7274] font-medium">Asosiy</h4>
+                <Image src="/NewsImage/icon7.svg" alt="icon" width={8} height={8} className="w-2 h-2 mt-2 mb-[5px]"/>
+                <h4 className="text-[#6D7274] font-medium">O'rganish</h4>
+                <Image src="/NewsImage/icon7.svg" alt="icon" width={8} height={8} className="w-2 h-2 mt-2 ml-[4px] mb-[5px]"/>
+                <h4 className="text-white font-medium">{courseTitle}</h4>
             </div>
 
             <div className="flex gap-6 mt-[15px] px-[40px] items-start">
@@ -151,7 +171,6 @@ export default function LessonWatchPage() {
                         <VideoPlayer
                             videoKey={currentLesson.id}
                             src={getVideoUrl(currentLesson)}
-                            initialSeconds={currentInfo?.record?.stoppedAt ?? 0}
                             onProgress={seconds => handleProgress(seconds, false)}
                             onEnded={durationSeconds => handleProgress(durationSeconds, true)}
                             nextLesson={nextLesson && nextInfo?.reachable ? {title: nextLesson.title, content: nextLesson.content, thumbnail: getThumbnail(nextLesson)} : null}
@@ -229,13 +248,13 @@ export default function LessonWatchPage() {
                                     onClick={() => goToLesson(lesson, reachable)}
                                     className={`flex items-center gap-[8px] px-[24px] py-[13px] transition-colors ${reachable ? "cursor-pointer hover:bg-white/5" : "cursor-not-allowed opacity-50"} ${lesson.id === currentLesson.id ? "bg-white/5" : ""}`}
                                 >
-                                    <div className={`shrink-0 w-[40px] h-[40px] rounded-[8px] border border-white/[0.08] flex items-center justify-center ${status === "in-progress" || status === "unlocked" ? "bg-[#1c92e0]" : "bg-white/10"}`}>
+                                    <div className={`shrink-0 w-[40px] h-[40px] rounded-[8px] border border-white/[0.08] flex items-center justify-center ${lesson.id === currentLesson.id ? "bg-[#1c92e0]" : "bg-white/10"}`}>
                                         {status === "completed" ? (
                                             <Image src="/icon-checkmark-circle-green.svg" alt="" width={20} height={20}/>
-                                        ) : status === "locked" ? (
-                                            <Image src="/icon-lock.svg" alt="" width={20} height={20}/>
-                                        ) : (
+                                        ) : lesson.id === currentLesson.id ? (
                                             <Image src="/vdplay.svg" alt="" width={20} height={20} className="ml-[5px]"/>
+                                        ) : (
+                                            <Image src="/icon-lock.svg" alt="" width={20} height={20}/>
                                         )}
                                     </div>
                                     <div className="min-w-0">
@@ -257,7 +276,7 @@ export default function LessonWatchPage() {
             {showCourseCompleted && (
                 <CourseCompletedModal
                     onClose={() => setShowCourseCompleted(false)}
-                    onDownloadCertificate={() => setShowCourseCompleted(false)}
+                    onDownloadCertificate={() => router.push(`/courses/${courseId}/completion`)}
                 />
             )}
         </div>

@@ -31,10 +31,27 @@ interface ReviewRaw {
 interface Comment {
     id: number;
     author: string;
-    avatar: string;
+    avatar: string | null;
+    initials: string;
     date: string;
     rating: number;
     text: string;
+}
+
+function initialsOf(fullName: string): string {
+    const parts = fullName.trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return "?";
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+}
+
+async function fetchUserById(userId: number): Promise<ReviewUser | null> {
+    try {
+        const {data} = await axios.get(`${API_URL}/admin/users/${userId}`);
+        return {id: data.id, fullName: data.fullName, image: data.profileImage};
+    } catch {
+        return null;
+    }
 }
 
 function formatDate(dateStr: string): string {
@@ -52,28 +69,37 @@ function formatDate(dateStr: string): string {
     }
 }
 
-function mapReview(r: ReviewRaw): Comment {
-    const userObj = typeof r.userId === "object" ? r.userId : (r.user ?? null);
+function mapReview(r: ReviewRaw, resolvedUser: ReviewUser | null): Comment {
+    const userObj = (typeof r.userId === "object" ? r.userId : (r.user ?? resolvedUser)) ?? null;
     const fullName = userObj?.fullName ?? userObj?.name ?? r.fullName ?? "Foydalanuvchi";
     const rawImage = userObj?.image ?? userObj?.avatar ?? r.userImage ?? "";
-    const avatar = rawImage
-        ? (rawImage.startsWith("http") ? rawImage : `${API_URL}/${rawImage}`)
-        : `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=1A1D1F&color=9DA1A3`;
+    const avatar = rawImage ? (rawImage.startsWith("http") ? rawImage : `${API_URL}/${rawImage}`) : null;
     return {
         id: r.id,
         author: fullName,
         avatar,
+        initials: initialsOf(fullName),
         date: formatDate(r.createdAt ?? r.date ?? ""),
         rating: r.rating ?? 0,
         text: r.comment ?? r.text ?? "",
     };
 }
 
-async function fetchReviews(courseId: number): Promise<ReviewRaw[]> {
+async function fetchReviews(courseId: number): Promise<Comment[]> {
     try {
         const {data} = await axios.get(`${API_URL}/public/courseReviews?size=500`);
         const all: ReviewRaw[] = Array.isArray(data) ? data : (data?.data ?? []);
-        return all.filter(r => Number(r.courseId) === courseId);
+        const forCourse = all.filter(r => Number(r.courseId) === courseId);
+
+        const idsToFetch = Array.from(new Set(
+            forCourse
+                .filter(r => typeof r.userId === "number")
+                .map(r => r.userId as number)
+        ));
+        const users = await Promise.all(idsToFetch.map(fetchUserById));
+        const userById = new Map(idsToFetch.map((id, i) => [id, users[i]]));
+
+        return forCourse.map(r => mapReview(r, typeof r.userId === "number" ? (userById.get(r.userId) ?? null) : null));
     } catch {
         return [];
     }
@@ -89,7 +115,7 @@ export default function CourseComments({courseId}: { courseId: number }) {
         if (!courseId) return;
         setLoading(true);
         fetchReviews(courseId).then(list => {
-            setComments(list.map(mapReview));
+            setComments(list);
             setLoading(false);
         });
     }, [courseId]);
@@ -106,12 +132,16 @@ export default function CourseComments({courseId}: { courseId: number }) {
                         key={comment.id}
                         className="relative flex gap-4 pb-6 border-b border-[#2C2F31]/40 last:border-none"
                     >
-                        <div className="w-[44px] h-[44px] rounded-full overflow-hidden shrink-0">
-                            <img
-                                src={comment.avatar}
-                                alt={comment.author}
-                                className="w-full h-full object-cover"
-                            />
+                        <div className="w-[44px] h-[44px] rounded-full overflow-hidden shrink-0 flex items-center justify-center bg-[#2C2F31]">
+                            {comment.avatar ? (
+                                <img
+                                    src={comment.avatar}
+                                    alt={comment.author}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <span className="text-[15px] font-semibold text-[#D0DCE8]">{comment.initials}</span>
+                            )}
                         </div>
 
                         <div className="flex flex-col gap-2 pr-8 w-full">

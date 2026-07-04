@@ -5,6 +5,7 @@ import {useRouter} from "next/navigation";
 import {getToken, getUserId} from "@/app/common/components/Auth/authApi";
 import {fetchUserLessonProgress, UserLessonRecord} from "@/app/courses/api/userLessonApi";
 import {
+    computeLessonStatuses,
     fetchCourseSectionsWithLessons,
     formatDuration,
     getThumbnail,
@@ -12,23 +13,20 @@ import {
     parseDurationToSeconds,
     Section,
 } from "@/app/courses/utils/lessonHelpers";
+import LessonLockedModal from "@/app/courses/components/LessonLockedModal";
 
-type LessonStatus = "locked" | "unlocked" | "in-progress" | "completed";
-
-function getLessonStatus(record: UserLessonRecord | undefined, reachable: boolean): LessonStatus {
-    if (record?.isCompleted) return "completed";
-    if (!reachable) return "locked";
-    if (record && (record.stoppedAt ?? 0) > 0) return "in-progress";
-    return "unlocked";
-}
-
-export default function CourseAccordion({courseId}: { courseId: number }) {
+export default function CourseAccordion({courseId, purchased = false, onRequestPurchase}: {
+    courseId: number;
+    purchased?: boolean;
+    onRequestPurchase?: () => void;
+}) {
     const router = useRouter();
     const [sections, setSections] = useState<Section[]>([]);
     const [openSections, setOpenSections] = useState<number[]>([]);
     const [loading, setLoading] = useState(true);
     const [progress, setProgress] = useState<Map<number, UserLessonRecord>>(new Map());
     const [videoDurations, setVideoDurations] = useState<Map<number, number>>(new Map());
+    const [lockedModalOpen, setLockedModalOpen] = useState(false);
     const token = getToken();
 
     useEffect(() => {
@@ -51,15 +49,23 @@ export default function CourseAccordion({courseId}: { courseId: number }) {
     }, [token]);
 
     const orderedLessons = sections.flatMap(s => s.lessons ?? []);
-    const lessonIndexMap = new Map(orderedLessons.map((l, i) => [l.id, i]));
+    const statusMap = new Map(
+        computeLessonStatuses(orderedLessons, progress, purchased).map(info => [info.lesson.id, info])
+    );
 
     function toggle(id: number) {
         setOpenSections(prev => prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]);
     }
 
-    function openLesson(lessonId: number, reachable: boolean) {
-        if (!reachable) return;
-        router.push(`/courses/${courseId}/lesson/${lessonId}`);
+    function openLesson(lessonId: number, reachable: boolean, accessAllowed: boolean) {
+        if (reachable) {
+            router.push(`/courses/${courseId}/lesson/${lessonId}`);
+            return;
+        }
+        // Not reachable: either the course isn't purchased (show the purchase prompt),
+        // or the previous lesson isn't finished yet — that lock just forces watching
+        // in order and must never be confused with the purchase lock.
+        if (!accessAllowed) setLockedModalOpen(true);
     }
 
     if (loading) return (
@@ -69,8 +75,6 @@ export default function CourseAccordion({courseId}: { courseId: number }) {
     );
 
     if (sections.length === 0) return null;
-
-    const firstIncompleteIndex = orderedLessons.findIndex(l => !progress.get(l.id)?.isCompleted);
 
     return (
         <>
@@ -100,10 +104,7 @@ export default function CourseAccordion({courseId}: { courseId: number }) {
                                     ) : (
                                         <div className="grid grid-cols-3 gap-4">
                                             {(section.lessons ?? []).map((lesson, i) => {
-                                                const record = progress.get(lesson.id);
-                                                const globalIndex = lessonIndexMap.get(lesson.id) ?? 0;
-                                                const reachable = firstIncompleteIndex === -1 || globalIndex <= firstIncompleteIndex;
-                                                const status = getLessonStatus(record, reachable);
+                                                const {status, reachable, accessAllowed, record} = statusMap.get(lesson.id)!;
                                                 const probedSeconds = videoDurations.get(lesson.id);
                                                 const durationSeconds = probedSeconds ?? parseDurationToSeconds(lesson.duration);
                                                 const watchedPct = status === "in-progress" && durationSeconds > 0
@@ -114,8 +115,8 @@ export default function CourseAccordion({courseId}: { courseId: number }) {
                                                 return (
                                                     <div
                                                         key={`${section.id}-${lesson.order ?? i}`}
-                                                        className={`rounded-[8px] overflow-hidden ${reachable ? "cursor-pointer" : "cursor-not-allowed"}`}
-                                                        onClick={() => openLesson(lesson.id, reachable)}
+                                                        className={`rounded-[8px] overflow-hidden ${reachable || !accessAllowed ? "cursor-pointer" : "cursor-not-allowed"}`}
+                                                        onClick={() => openLesson(lesson.id, reachable, accessAllowed)}
                                                     >
                                                         <div className="relative h-[180px]">
                                                             <img
@@ -177,6 +178,14 @@ export default function CourseAccordion({courseId}: { courseId: number }) {
                 })}
             </div>
 
+            <LessonLockedModal
+                open={lockedModalOpen}
+                onClose={() => setLockedModalOpen(false)}
+                onBuy={() => {
+                    setLockedModalOpen(false);
+                    onRequestPurchase?.();
+                }}
+            />
         </>
     );
 }

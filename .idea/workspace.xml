@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c8216732-319f-4390-8e07-269b5b0699d4" name="Changes" comment="" />
+    <list default="true" id="c8216732-319f-4390-8e07-269b5b0699d4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/courses/[id]/lesson/[lessonId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/[id]/lesson/[lessonId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/courses/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/courses/components/Accardion.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/components/Accardion.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/courses/components/CourseCompletedModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/components/CourseCompletedModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/courses/utils/lessonHelpers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/courses/utils/lessonHelpers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/icon-download.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/icon-flag-checkered.svg" beforeDir="false" afterPath="$PROJECT_DIR$/public/icon-flag-checkered.svg" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -122,6 +132,7 @@
       <workItem from="1782912299135" duration="518000" />
       <workItem from="1782951573838" duration="30933000" />
       <workItem from="1783036710151" duration="19984000" />
+      <workItem from="1783072074953" duration="4055000" />
     </task>
     <servers />
   </component>

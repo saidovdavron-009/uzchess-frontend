@@ -13,10 +13,9 @@ export interface NextLessonPreview {
     thumbnail?: string;
 }
 
-export default function VideoPlayer({src, videoKey, initialSeconds, onProgress, onEnded, nextLesson, onPlayNext, lessonDate}: {
+export default function VideoPlayer({src, videoKey, onProgress, onEnded, nextLesson, onPlayNext, lessonDate}: {
     src: string;
     videoKey: number;
-    initialSeconds: number;
     onProgress: (seconds: number) => void;
     onEnded: (durationSeconds: number) => void;
     nextLesson?: NextLessonPreview | null;
@@ -74,7 +73,6 @@ export default function VideoPlayer({src, videoKey, initialSeconds, onProgress, 
         const v = videoRef.current;
         if (!v) return;
         setDuration(v.duration);
-        if (initialSeconds > 0 && initialSeconds < v.duration) v.currentTime = initialSeconds;
     }
 
     function handleTimeUpdate() {

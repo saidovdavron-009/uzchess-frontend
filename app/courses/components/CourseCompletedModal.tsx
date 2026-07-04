@@ -7,12 +7,17 @@ export default function CourseCompletedModal({onClose, onDownloadCertificate}: {
 }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-            <div className="relative w-[420px] max-w-[90vw] rounded-[16px] bg-[#14171A] border border-[#232627] px-[32px] py-[40px] flex flex-col items-center text-center">
-                <div className="relative w-[88px] h-[88px] mb-[20px] flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-full bg-[#3DBE29]/30 blur-xl"/>
-                    <div className="relative w-[80px] h-[80px] rounded-full bg-[#3DBE29] flex items-center justify-center">
-                        <Image src="/icon-flag-checkered.svg" alt="" width={36} height={36}/>
-                    </div>
+            <div className="relative isolate w-[420px] max-w-[90vw] rounded-[16px] bg-[#14171A] border border-[#232627] px-[32px] py-[40px] flex flex-col items-center text-center overflow-hidden">
+                <Image
+                    src="/otdonasi.svg"
+                    alt=""
+                    width={324}
+                    height={418}
+                    className="absolute -z-10 top-1/2 left-0 -translate-y-1/2 w-[280px] h-auto"
+                />
+
+                <div className="relative w-[128px] h-[128px] mb-[20px] flex items-center justify-center">
+                    <Image src="/icon-flag-checkered.svg" alt="" width={128} height={128} className="relative"/>
                 </div>
 
                 <h2 className="text-[#f7f9fa] text-[22px] font-bold font-poppins mb-[12px]">Tabriklaymiz!</h2>
@@ -24,7 +29,7 @@ export default function CourseCompletedModal({onClose, onDownloadCertificate}: {
                     onClick={onDownloadCertificate}
                     className="w-full h-[48px] rounded-[10px] bg-[#1c92e0] hover:bg-[#1a7fc7] transition-colors flex items-center justify-center gap-[10px] text-white text-[15px] font-poppins font-medium"
                 >
-                    <Image src="/icon-download.svg" alt="" width={18} height={18}/>
+                    <Image src="/icon-certificate.svg" alt="" width={18} height={18}/>
                     Sertifikatni yuklab olish
                 </button>
 
